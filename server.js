@@ -33,12 +33,9 @@ async function fetchVideoMetadata(videoUrl) {
     );
     if (!res.ok) throw new Error("Video not found");
     const data = await res.json();
-
     return {
       id: videoId,
-      title: data.title,
-      author: data.author_name,
-      thumbnail: data.thumbnail_url,
+      ...data,
     };
   } catch {
     return null;
@@ -85,7 +82,6 @@ io.on("connection", (socket) => {
 
   socket.on("playback-time-update", ({ roomId, time }) => {
     currentTime = time;
-    // Broadcast updated time to all except sender
     socket.to(roomId).emit("playback-time-update", time);
   });
 
